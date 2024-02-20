@@ -1,33 +1,33 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
+.top-separator {
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    margin-top: 1em;
   }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  
+  .MuiTablePagination-selectLabel {
+  
+    margin-top: 15px;
   }
-}
+  
+  .MuiTablePagination-displayedRows {
+  
+    margin-top: 15px;
+  }
+  
+  .odd {
+  
+    background-color: hwb(0deg 97% 3%);
+  }
+  
+  .typeahead-value {
+    font-style: italic;
+    font-size: small;    
+  }
+  
+  .icon-action {
+    border: 0px;
+    background-color: transparent
+  }
