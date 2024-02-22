@@ -5,6 +5,7 @@ import Login from "../Login";
 import { useState } from "react";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { userStore } from "@/stores/UserStore";
 
 const MainLayout = ({children} : {
     children: React.ReactNode
@@ -13,6 +14,15 @@ const MainLayout = ({children} : {
     const [session, setSession] = useState<Session>();
 
     const supabase = createClientComponentClient();
+
+    const user = userStore();
+
+    const userId = user.getUser();
+
+    if (userId === '') {
+
+        console.log("User is not logged")
+    }
 
     if (!session) {
 

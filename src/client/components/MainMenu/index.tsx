@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { User, createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { UserService } from '@/services/UserService';
+import { useUserStore, userStore } from '@/stores/UserStore';
 
 const MainMenu = () => {
 
@@ -36,6 +37,10 @@ const MainMenu = () => {
 
     userService.logout()
     .then(() => {
+
+      const { setUser } = useUserStore((state) => state)
+
+      setUser({id: ''})
 
       router.refresh();
     }).catch(error => {

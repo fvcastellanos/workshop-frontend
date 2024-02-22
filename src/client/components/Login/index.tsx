@@ -7,6 +7,7 @@ import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap'
 import Alert from '../Alert'
 import { ErrorView } from '@/client/domain/ErrorView'
 import { UserService } from '@/services/UserService'
+import { useUserStore, userStore } from '@/stores/UserStore'
 
 export default function Login() {
 
@@ -22,14 +23,22 @@ export default function Login() {
 
   const handleSignIn = () => {
 
+    const user = userStore();
+
     setError(new ErrorView(false, ''));
 
     const email = userRef.current?.value? userRef.current?.value : '';
     const password = passwordRef.current?.value? passwordRef.current?.value : '';
 
     userService.login(email, password)
-        .then(() => {
+        .then((data) => {
 
+            const { setUser } = useUserStore((state) => state)
+
+            setUser({ id: data.email});
+
+            // user.updateUser(data.email);
+            console.log('state udpated');
             router.refresh();
         
         }).catch(error => {
