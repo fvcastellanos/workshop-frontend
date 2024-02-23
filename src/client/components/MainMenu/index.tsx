@@ -1,65 +1,37 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { User, createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { UserService } from '@/services/UserService';
-import { useUserStore, userStore } from '@/stores/UserStore';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { setUser } from '@/slices/user-slice';
 
 const MainMenu = () => {
 
-  const supabase = createClientComponentClient();
-  const [user, setUser] = useState<User>();
   const router = useRouter();
 
   const userService = new UserService();
 
-  supabase.auth.getUser()
-  .then(response => {
-    
-    if (response.error) {
-      console.log(response.error);
-      return;
-    }
-
-    if (response.data.user) {
-
-      setUser(response.data.user);
-    }
-  }).catch(error => {
-    console.log(error);
-  });
+  const user = useAppSelector((state) => state.userReducer.user);
+  const dispatch = useAppDispatch();
 
   const logoutUser = () => {
 
     userService.logout()
     .then(() => {
 
-      const { setUser } = useUserStore((state) => state)
+      dispatch(setUser(null));
 
-      setUser({id: ''})
+      // router.push('/');
 
       router.refresh();
     }).catch(error => {
       console.log(error);
     });
 
-    // supabase.auth.signOut()
-    // .then(data => {
-
-    //   if (data.error) {
-    //     console.log(data.error);
-    //     return;
-    //   }
-
-    //   document.location.href = '/';
-    // })
-    // .catch(error => {
-    //   console.log(error);
-    // });
   };
   
   return (

@@ -1,52 +1,28 @@
 
-import { Session, createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import MainMenu from "../MainMenu";
 import Login from "../Login";
-import { useState } from "react";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { userStore } from "@/stores/UserStore";
+import { useAppSelector } from "@/app/hooks";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useState } from "react";
 
 const MainLayout = ({children} : {
     children: React.ReactNode
 }) => {
 
-    const [session, setSession] = useState<Session>();
+    const user = useAppSelector((state) => state.userReducer.user);
+    const [ session, setSession ] = useState(null);
 
     const supabase = createClientComponentClient();
 
-    const user = userStore();
+    supabase.auth.getSession()
+        .then((data: any) => {
 
-    const userId = user.getUser();
-
-    if (userId === '') {
-
-        console.log("User is not logged")
-    }
-
-    if (!session) {
-
-        supabase.auth.getSession()
-        .then(response => {
-
-            console.log(response);
-
-            if (response.error) {
-                console.log(response.error);
-                return;
-            }
-
-            const data = response.data;
-
-            if (data.session) {
-
-                setSession(data.session);
-            }
+            setSession(data);
         });
 
-    }
-
-    if (!session) {
+    if (!user) {
         return (
             <Login />
         );

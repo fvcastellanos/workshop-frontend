@@ -1,29 +1,28 @@
 'use client'
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 import { useRef, useState } from 'react'
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap'
 import Alert from '../Alert'
 import { ErrorView } from '@/client/domain/ErrorView'
 import { UserService } from '@/services/UserService'
-import { useUserStore, userStore } from '@/stores/UserStore'
+import { useAppDispatch } from '@/app/hooks'
+import { setUser } from '@/slices/user-slice'
+
 
 export default function Login() {
 
   const [error, setError] = useState(new ErrorView(false, ''));
 
   const router = useRouter()
-  const supabase = createClientComponentClient()
 
   const userRef = useRef<HTMLInputElement | null>();
   const passwordRef = useRef<HTMLInputElement | null>();
 
   const userService = new UserService();
+  const dispatch = useAppDispatch();
 
   const handleSignIn = () => {
-
-    const user = userStore();
 
     setError(new ErrorView(false, ''));
 
@@ -33,12 +32,7 @@ export default function Login() {
     userService.login(email, password)
         .then((data) => {
 
-            const { setUser } = useUserStore((state) => state)
-
-            setUser({ id: data.email});
-
-            // user.updateUser(data.email);
-            console.log('state udpated');
+            dispatch(setUser(data));
             router.refresh();
         
         }).catch(error => {

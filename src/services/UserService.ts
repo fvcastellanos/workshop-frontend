@@ -1,3 +1,4 @@
+import { User } from "@supabase/supabase-js";
 import { AbstractSupaBaseClient } from "./AbstractSupaBaseClient";
 
 export class UserService extends AbstractSupaBaseClient {
@@ -6,7 +7,7 @@ export class UserService extends AbstractSupaBaseClient {
         super();
     }
 
-    async login(email: string, password: string): Promise<any> {
+    async login(email: string, password: string): Promise<User> {
 
         const { data, error } = await this.supabase.auth.signInWithPassword({ 
             email,
@@ -17,7 +18,7 @@ export class UserService extends AbstractSupaBaseClient {
             throw new Error(error.message);
         }
 
-        if (!data) {
+        if (!data || !data.user) {
 
             throw new Error("Unable to retrieve user data");
         }
