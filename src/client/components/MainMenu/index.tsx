@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation';
 import { UserService } from '@/services/UserService';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setUser } from '@/slices/user-slice';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
 const MainMenu = () => {
 
@@ -15,22 +17,68 @@ const MainMenu = () => {
 
   const userService = new UserService();
 
+  const supabase = createClientComponentClient();
   const user = useAppSelector((state) => state.userReducer.user);
   const dispatch = useAppDispatch();
 
+  const logout = async () => {
+
+    const { error } = await supabase.auth.signOut();
+
+    console.log('user signed out')
+
+    if (error) {
+        throw new Error(error.message);
+    }    
+
+    // await userService.logout();
+
+
+    dispatch(setUser(null));
+
+    console.log('clean userReducer')
+
+    // document.location = '/';
+
+    router.refresh();
+
+    console.log('page refreshed')
+
+  }
+
   const logoutUser = () => {
 
-    userService.logout()
-    .then(() => {
+    alert('about to sign out')
+
+
+    fetch('/api/logout').then(response => {
 
       dispatch(setUser(null));
+      // router.push('/api/logout');
+
+    });
+
+    // supabase.auth.signOut()
+
+
+    // userService.logout()
+    // .then(() => {
+      // console.log('user signed out')
+
+      // dispatch(setUser(null));
+      
+      // console.log('clean userReducer')
+
+      // cookies().delete('')
 
       // router.push('/');
 
-      router.refresh();
-    }).catch(error => {
-      console.log(error);
-    });
+      // console.log('page refreshed')
+
+      // router.refresh();
+    // }).catch(error => {
+    //   console.log(error);
+    // });
 
   };
   

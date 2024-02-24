@@ -14,13 +14,13 @@ const MainLayout = ({children} : {
     const user = useAppSelector((state) => state.userReducer.user);
     const [ session, setSession ] = useState(null);
 
-    const supabase = createClientComponentClient();
+    // const supabase = createClientComponentClient();
 
-    supabase.auth.getSession()
-        .then((data: any) => {
+    // supabase.auth.getSession()
+    //     .then((data: any) => {
 
-            setSession(data);
-        });
+    //         setSession(data.session);
+    //     });
 
     if (!user) {
         return (

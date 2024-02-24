@@ -9,8 +9,8 @@ const Alert = ({ show,
                  }: {
                     show: boolean,
                     message: string,
-                    variant: string,
-                    dismissible: boolean,
+                    variant?: string | null,
+                    dismissible?: boolean | null,
                     onDismiss: () => void,
                  }) => {
 
